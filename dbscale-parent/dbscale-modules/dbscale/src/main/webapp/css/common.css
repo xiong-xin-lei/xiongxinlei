@@ -1,0 +1,488 @@
+/* vxe版本升级将改动返回上版本 */
+body{margin:0;line-height:1.5;font-variant:tabular-nums;-webkit-font-feature-settings:"tnum";font-feature-settings:"tnum"}
+.vxe-button.type--text{padding:0;}
+.vxe-table .vxe-cell{white-space:normal;}
+
+/* 全部字体 */
+* {
+    font-family: Arial, 'Helvetica Neue', 'Microsoft YaHei', 'Ping Fang SC';
+}
+
+.iframeBorder {
+    border: #E8EAEC solid 2px;
+    background-color: #ffffff;
+}
+
+.btnParentDiv {
+    padding: 20px;
+    border-bottom: 1px solid #E8EAEC;
+    overflow: auto;
+}
+
+.btnParentDiv .vxe-toolbar {
+    float: right;
+}
+
+.pageSvgColor {
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.pageSvgColor g, .pageSvgColor path {
+    fill: #999;
+}
+
+.btnSvgColor {
+    position: sticky;
+    top: 500%;
+}
+
+.btnSvgColor * {
+    fill: #409eff;
+}
+
+.is--disabled .btnSvgColor * {
+    fill: #a6d2ff;
+}
+
+.orderTitle {
+    text-align: center;
+    color: red;
+    margin-top: 5px;
+}
+
+/* vue 防止页面加载时看到花括号解决 */
+[v-cloak] {
+    display: none !important;
+}
+
+/* element css */
+.el-button--small {
+    font-size: 14px;
+    border-radius: 4px;
+}
+
+.el-breadcrumb__separator {
+    margin: 0 3px;
+}
+
+.el-form-item__error {
+    white-space: nowrap;
+}
+
+.el-dropdown-menu-item {
+    font-size: 12px;
+    padding: 0;
+}
+
+.el-icon-arrow-down {
+    font-size: 12px;
+}
+
+.enabledText {
+    color: #333333;
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+.disabledText {
+    color: #bbbbbb;
+}
+
+.el-input.is-disabled .el-input__inner {
+    background-color: #fcfcfc;
+    /*border-color: #d9d9d9;*/
+    color: #777;
+}
+
+.el-textarea.is-disabled .el-textarea__inner {
+    background-color: #fcfcfc;
+    /*border-color: #d9d9d9;*/
+    color: #777;
+}
+
+.childRows {
+    list-style: none;
+}
+
+.el-button {
+    border: 1px solid #d9d9d9;
+    color: #666;
+}
+
+.el-button:HOVER {
+    border: 1px solid #2b85e4;
+    color: #2b85e4;
+    background-color: #fff;
+}
+
+.el-button:ACTIVE {
+    border: 1px solid #2976d6;
+    color: #2976d6;
+    background-color: #fff;
+}
+
+.el-button--primary {
+    border: none;
+    background-color: #2d8cf0;
+    color: #fff;
+}
+
+.el-button--primary:HOVER {
+    border: none;
+    background-color: #2b85e4;
+    color: #fff;
+}
+
+.el-button--primary:ACTIVE {
+    border: none;
+    background-color: #2976d6;
+    color: #fff;
+}
+
+.el-button--danger {
+    border: none;
+    background-color: #f8453f;
+    color: #fff;
+}
+
+.el-button--danger:HOVER {
+    border: none;
+    background-color: #f8614b;
+    color: #fff;
+}
+
+.el-button--danger:ACTIVE {
+    border: none;
+    background-color: #f6535a;
+    color: #fff;
+}
+
+.el-form-item__label {
+    font-size: 12px !important;
+    color: #666 !important;
+    padding-right: 20px !important;
+}
+
+.el-textarea__inner, .el-input__inner {
+    border-color: #d9d9d9;
+}
+
+.el-form-item.is-error .el-input__inner {
+    border-color: #f84242;
+}
+
+.el-form-item__error {
+    color: #f84242;
+}
+
+.el-select__tags {
+    padding: 0 7px;
+}
+
+.el-picker-panel__footer .el-button {
+    width: 56px
+}
+
+.elConfirmDiv{
+	width: 450px
+}
+
+.el-message-box {
+    padding-bottom: 0
+}
+
+.el-message-box__header {
+    padding: 16px;
+    background-color: #f7f7f7;
+}
+
+.el-message-box--center .el-message-box__header {
+    padding: 16px;
+}
+
+.el-message-box__title {
+    font-size: 16px
+}
+
+.el-message-box__content {
+    padding: 35px;
+}
+
+.el-message-box__btns {
+    padding: 10px;
+    border-top: 2px #f7f7f7 solid;
+}
+
+.el-message-box__btns button {
+    margin-left: 15px
+}
+
+.el-dropdown-menu-item .vxe-button--content {
+    padding: 0 20px;
+}
+
+.el-dropdown-menu-item .vxe-button {
+    text-align: left;
+    width: 100%;
+    height: 36px;
+}
+
+.el-step__title {
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.btn-custom-cancel {
+    float: right;
+    margin-left: 10px;
+}
+
+/* 上方下拉按钮空隙 */
+#btnPanel .el-button + .el-button {
+    margin-left: 10px;
+}
+
+#btnPanel > * {
+    margin-left: 10px;
+}
+
+#btnPanel > *:first-child {
+    margin-left: 0;
+}
+
+/* .is-disabled{
+	border: 1px solid #d9d9d9;
+	color: #bbb;
+	background-color: #f7f7f7;
+} */
+/* vxe table */
+table {
+    font-size: 12px;
+}
+
+.vxe-header--row {
+    background-color: #f7f7f7;
+}
+
+.vxe-table .is--checked.vxe-cell--checkbox {
+    color: #2d8cf0;
+}
+
+.vxe-body--row .col--expand {
+    /* cursor: pointer; */
+    color: #2d8cf0;
+}
+
+.vxe-expand-text {
+    cursor: pointer;
+    color: #2d8cf0;
+}
+
+/* .childRows li>span:first-of-type{
+	display: inline-block;
+	width: 80px;
+	float: left;
+}
+.childRows li>span:last-child{
+	display: inline-block;
+	width: 240px;
+	word-wrap:break-word;  
+    word-break:break-all;
+    white-space:pre-wrap;
+} */
+.childRows {
+    margin: 10px 40px
+}
+
+.childRows tr td:nth-child(even) {
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: pre-wrap;
+}
+
+.vxe-toolbar { /* 搜索框 */
+    display: inline-block;
+    height: 34px;
+    margin-left: 10px;
+}
+
+.vxe-toolbar:after {
+    display: none;
+}
+/*操作列按钮 2021/03/03 改造后*/
+.operationBtn {
+    display: inline-block;
+    color: #409EFF;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.operationBtn>span , .operationBtn .el-dropdown{
+	cursor: pointer;
+	padding: 0 10px;
+    border-left: 1px #E1E1E1 solid;
+}
+
+.operationBtn .el-dropdown{
+	height:14px	
+}
+
+.operationBtn:first-child>span{
+    padding-left: 0;
+    border-left: none;
+}
+
+.operationBtn:first-child>.el-dropdown{
+    padding-left: 0;
+    border-left: none;
+}
+
+.operationBtn:last-child>.el-dropdown{
+    padding-right: 0;
+}
+
+.operationBtn div {
+    cursor: pointer;
+    color: #409EFF;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.operationBtn .el-icon--right {
+    margin-left: 0;
+}
+
+/* .col--last .vxe-cell button{
+	margin-left: 0;
+	padding-right: 5px;
+} */
+
+/* 搜索框长度自定义 */
+.btnParentDiv .vxe-input{
+	width:300px
+}
+
+.vxe-button {
+    margin: 0;
+    padding: 0;
+}
+
+.vxe-button--dropdown {
+    margin: 0;
+}
+
+.vxe-button--dropdown-wrapper {
+    padding: 5px 0;
+    border-radius: 4px;
+}
+
+.vxe-body--expanded-cell {
+    padding: 0 !important;
+}
+
+.vxe-button--dropdown-panel {
+    left: -40px !important;
+}
+
+.vxe-button--dropdown-panel .vxe-button {
+    display: inline-block;
+    padding: 7px 41px 7px 15px !important;
+    margin: 0;
+}
+
+.vxe-button--dropdown-panel .vxe-button:HOVER {
+    background-color: #eaf3fd;
+}
+
+.vxe-button--content {
+    font-size: 12px;
+    font-weight: bold;
+}
+.vxe-table .vxe-body--row.row--checked, .vxe-table .vxe-body--row.row--radio.row--radio {
+    background-color: #eaf3fd;
+}
+
+.vxe-table .vxe-body--row.row--hover.row--checked, .vxe-table .vxe-body--row.row--hover.row--radio.row--radio {
+    background-color: #F5F7FA;
+}
+
+.actionRefresh {
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* layer */
+.layui-layer-title {
+    height: 47px !important;
+    line-height: 47px !important;
+    background-color: #f7f7f7 !important;
+}
+
+/*自定义样式*/
+.taskStatusStyle span {
+    cursor: pointer;
+    line-height: 14px;
+    color: #2d8cf0;
+    display: inline-block;
+    border-bottom: 1px solid #2d8cf0;
+    padding-bottom: 1px;
+}
+
+.setupDIV {
+    padding: 20px 70px 10px 40px;
+}
+
+.msgHintStyle{
+	margin-top:8px;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.msgHintStyle:first-child{
+	margin-top:0px;
+}
+
+.vxe-table.size--small.virtual--x .col--ellipsis .vxe-cell, .vxe-table.size--small.virtual--y .col--ellipsis .vxe-cell,
+.vxe-table.size--small .vxe-body--column.col--ellipsis .vxe-cell,
+.vxe-table.size--small .vxe-footer--column.col--ellipsis .vxe-cell,
+.vxe-table.size--small .vxe-header--column.col--ellipsis .vxe-cell {
+    max-height: 50px;
+}
+
+.vxe-table .row-highlightShow {
+	background-color: #e6f7ff;
+}
+
+.vxe-table .row-normalShow {
+	background-color: #fff;
+}
+
+/*设置消息提示框最大高度*/
+.elMessageDiv>.el-message__content{
+	margin:0px 16px 0px 6px;
+	padding:1px 0px;
+	max-height:300px;
+	overflow:auto;
+}
+/*消息提示框 关闭按钮颜色修改*/
+.elMessageDiv>.el-message__closeBtn{
+	color:#909399;
+}
+.elMessageDiv>.el-message__closeBtn:hover{
+	color:#000000
+}
+
+/*信息提示框自定义宽度*/
+.customizeWidth490pxClass{
+    width: 490px;
+}
+.customizeWidth510pxClass{
+    width: 510px;
+}
+.customizeWidth540pxClass{
+    width: 540px;
+}

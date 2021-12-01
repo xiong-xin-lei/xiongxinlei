@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.OrderGroupDAO">
+    <resultMap id="orderGroupRM" type="com.bsg.dbscale.dao.domain.OrderGroupDO">
+        <id property="id" column="og_id" />
+        <result property="category" column="og_category" />
+        <result property="businessSubsystemId" column="og_business_subsystem_id" />
+        <result property="businessAreaId" column="og_business_area_id" />
+        <result property="sysArchitecture" column="og_sys_architecture" />
+        <result property="name" column="og_name" />
+        <result property="createType" column="og_create_type" />
+        <result property="state" column="og_state" />
+        <result property="msg" column="og_msg" />
+        <result property="owner" column="og_owner" />
+        <result property="gmtCreate" column="og_gmt_create" />
+        <result property="creator" column="og_creator" />
+        <result property="gmtModified" column="og_gmt_modified" />
+        <result property="editor" column="og_editor" />
+        <association property="businessSubsystem" 
+            resultMap="com.bsg.dbscale.dao.dao.BusinessSubsystemDAO.businessSubsysDetailRM"/>
+        <association property="businessArea" 
+            resultMap="com.bsg.dbscale.dao.dao.BusinessAreaDAO.areaRM"/>
+        <collection property="orders" resultMap="com.bsg.dbscale.dao.dao.OrderDAO.orderRM">    
+        </collection>
+    </resultMap>
+    
+    <sql id="order_group">
+        og.id AS og_id,
+        og.category AS og_category,
+        og.business_subsystem_id AS og_business_subsystem_id,
+        og.business_area_id AS og_business_area_id,
+        og.sys_architecture AS og_sys_architecture,
+        og.name AS og_name,
+        og.create_type AS og_create_type,
+        og.state AS og_state,
+        og.msg AS og_msg,
+        og.owner AS og_owner,
+        og.gmt_create AS og_gmt_create,
+        og.creator AS og_creator,
+        og.gmt_modified AS og_gmt_modified,
+        og.editor AS og_editor
+    </sql>
+    
+    <select id="list" resultMap="orderGroupRM">
+        SELECT 
+            <include refid="order_group" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessSubsystemDAO.businessSubsys" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessSystemDAO.businessSys" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessAreaDAO.area" />,
+            <include refid="com.bsg.dbscale.dao.dao.OrderDAO.order" />
+        FROM tbl_order_group og,
+            tbl_business_subsystem subsys, 
+            tbl_business_system sys,
+            tbl_business_area area, 
+            tbl_order o
+        WHERE og.business_subsystem_id = subsys.id
+            AND subsys.business_system_id = sys.id 
+            AND og.business_area_id = area.id 
+            AND o.order_group_id = og.id
+        <if test="siteId != null">
+            AND area.site_id = #{siteId}
+        </if>
+        <if test="category != null">
+            AND og.category = #{category}
+        </if>
+        <if test="createType != null">
+            AND og.create_type = #{createType}
+        </if>
+        <if test="name != null">
+            AND og.name = #{name}
+        </if>
+        <if test="state != null">
+            AND og.state = #{state}
+        </if>
+        ORDER BY og.gmt_create DESC
+    </select>
+    
+    <select id="get" resultMap="orderGroupRM">
+        SELECT 
+            <include refid="order_group" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessSubsystemDAO.businessSubsys" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessSystemDAO.businessSys" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessAreaDAO.area" />,
+            <include refid="com.bsg.dbscale.dao.dao.OrderDAO.order" />
+        FROM tbl_order_group og,
+            tbl_business_subsystem subsys, 
+            tbl_business_system sys,
+            tbl_business_area area, 
+            tbl_order o
+        WHERE og.business_subsystem_id = subsys.id
+            AND subsys.business_system_id = sys.id 
+            AND og.business_area_id = area.id 
+            AND o.order_group_id = og.id
+            AND og.id = #{id}
+        ORDER BY o.type DESC
+    </select>
+    
+    <select id="countBySubsystemId" resultType="int">
+        SELECT COUNT(*)
+        FROM tbl_order_group
+        WHERE business_subsystem_id = #{businessSubsystemId}
+    </select>
+    
+    <select id="countByBusinessAreaId" resultType="int">
+        SELECT COUNT(*)
+        FROM tbl_order_group
+        WHERE business_area_id = #{businessAreaId}
+    </select>
+    
+    <select id="countByName" resultType="int">
+        SELECT COUNT(*)
+        FROM tbl_order_group
+        WHERE name = #{name}
+    </select>
+    
+    <insert id="save" parameterType="com.bsg.dbscale.dao.domain.OrderGroupDO">
+        INSERT INTO tbl_order_group
+        (
+            id,
+            category,
+            business_subsystem_id,  
+            business_area_id,    
+            sys_architecture,   
+            name,
+            create_type,
+            state,
+            msg,
+            owner,
+            gmt_create,
+            creator
+        )
+        VALUES
+        (
+            #{id},
+            #{category},
+            #{businessSubsystemId},
+            #{businessAreaId},  
+            #{sysArchitecture},      
+            #{name},
+            #{createType},
+            #{state},
+            #{msg},
+            #{owner},
+            #{gmtCreate},
+            #{creator}
+        )
+    </insert>
+    
+    <update id="update">
+        UPDATE tbl_order_group
+        <set>
+            business_subsystem_id = #{businessSubsystemId},         
+            business_area_id = #{businessAreaId},
+            sys_architecture = #{sysArchitecture},
+            state = #{state},
+            msg = #{msg},
+            gmt_modified = #{gmtModified},
+            editor = #{editor}
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <update id="updateStateAndMsg">
+        UPDATE tbl_order_group
+        <set>
+            state = #{state},
+            msg = #{msg}
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="remove">
+        DELETE FROM tbl_order_group
+        WHERE id = #{id}
+    </delete>
+    
+    <delete id="removeCascadeByName">
+        DELETE tbl_order_group, tbl_order 
+        FROM tbl_order_group LEFT JOIN tbl_order ON tbl_order_group.id = tbl_order.order_group_id
+        WHERE tbl_order_group.name = #{name}
+    </delete>
+    
+</mapper>

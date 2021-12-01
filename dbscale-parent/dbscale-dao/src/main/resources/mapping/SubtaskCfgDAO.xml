@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.SubtaskCfgDAO">
+    <resultMap id="cfgRM" type="com.bsg.dbscale.dao.domain.SubtaskCfgDO">
+        <id property="objType" column="obj_type" />
+        <id property="actionType" column="action_type" />
+        <result property="timeout" column="timeout" />
+        <result property="description" column="description" />
+    </resultMap>
+    
+    <sql id="cfg">
+        obj_type,
+        action_type,
+        timeout,
+        description
+    </sql>
+
+    <select id="list" resultMap="cfgRM">
+        SELECT 
+            <include refid="cfg" />
+        FROM tbl_subtask_cfg
+        ORDER BY obj_type ASC
+    </select>
+    
+    <select id="get" resultMap="cfgRM">
+        SELECT 
+            <include refid="cfg" />
+        FROM tbl_subtask_cfg
+        WHERE obj_type = #{objType}
+            AND action_type = #{actionType}
+    </select>
+    
+    <update id="update" parameterType="com.bsg.dbscale.dao.domain.SubtaskCfgDO">
+        UPDATE tbl_subtask_cfg
+        <set>
+            timeout = #{timeout},
+            description = #{description}
+        </set>
+        WHERE obj_type = #{objType}
+            AND action_type = #{actionType}
+    </update>
+
+</mapper>

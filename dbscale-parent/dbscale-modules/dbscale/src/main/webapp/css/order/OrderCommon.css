@@ -1,0 +1,31 @@
+@CHARSET "UTF-8";
+.el-input-group__append{
+    padding: 0 10px;
+}
+.el-input.is-disabled .el-input__inner{
+    color: #000000;
+    border-color: #d9d9d9;
+}
+.el-input--small .el-input__inner{
+    color: #000000;
+}
+.el-step.is-simple .el-step__icon{
+    height: 14px;
+    width: 14px;
+}
+.el-step.is-simple .el-step__title{
+    font-size: 14px;
+}
+.el-steps--simple{
+    padding: 8px 8%;
+}
+
+.vxe-table{
+    margin: 0 !important;
+}
+.messageBoxMsgTest{
+    width: 384px;
+}
+.messageBoxMsgTest .el-message-box__content{
+    padding: 10px 35px;
+}

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.UserDAO">
+    <resultMap id="userRM" type="com.bsg.dbscale.dao.domain.UserDO">
+        <id property="username" column="username" />
+        <result property="authType" column="user_auth_type" />
+        <result property="password" column="password" />
+        <result property="name" column="user_name" />
+        <result property="telephone" column="user_telephone" />
+        <result property="email" column="user_email" />
+        <result property="company" column="user_company" />
+        <result property="emerContact" column="user_emer_contact" />
+        <result property="emerTel" column="user_emer_tel" />
+        <result property="enabled" column="user_is_enabled" />
+        <result property="roleId" column="role_id" />
+        <result property="ogAutoExamine" column="user_og_auto_examine" />
+        <result property="ogAutoExecute" column="user_og_auto_execute" />
+        <result property="gmtCreate" column="user_gmt_create" />
+        <result property="creator" column="user_creator" />
+        <result property="gmtModified" column="user_gmt_modified" />
+        <result property="editor" column="user_editor" />
+    </resultMap>
+
+    <resultMap id="userDetailRM" extends="userRM"
+        type="com.bsg.dbscale.dao.domain.UserDO">
+        <association property="role"
+            resultMap="com.bsg.dbscale.dao.dao.RoleDAO.roleRM" />
+        <collection property="groups" resultMap="com.bsg.dbscale.dao.dao.GroupDAO.groupRM"></collection>    
+    </resultMap>
+    
+    <sql id="user">
+        u.username,
+        u.auth_type AS user_auth_type,
+        u.password,
+        u.name AS user_name,
+        u.telephone AS user_telephone,
+        u.email AS user_email,
+        u.company AS user_company,
+        u.emer_contact AS user_emer_contact,
+        u.emer_tel AS user_emer_tel,
+        u.is_enabled AS user_is_enabled,
+        u.og_auto_examine AS user_og_auto_examine,
+        u.og_auto_execute AS user_og_auto_execute,
+        u.gmt_create AS user_gmt_create,
+        u.creator AS user_creator,
+        u.gmt_modified AS user_gmt_modified,
+        u.editor AS user_editor
+    </sql>
+
+    <select id="list" resultMap="userDetailRM">
+        SELECT 
+            <include refid="user" />,
+            <include refid="com.bsg.dbscale.dao.dao.RoleDAO.role" />,
+            <include refid="com.bsg.dbscale.dao.dao.GroupDAO.group_p1" />
+        FROM tbl_user u 
+                LEFT JOIN tbl_group_user gu ON u.username = gu.username 
+                LEFT JOIN tbl_group g ON gu.group_id = g.id, 
+            tbl_role r
+        WHERE r.id = u.role_id
+        <if test="roleId != null">
+            AND r.id = #{roleId}
+        </if>
+        <if test="groupId != null">
+            AND g.id = #{groupId}
+        </if>
+        <if test="enabled != null">
+            AND u.enabled = #{enabled}
+        </if>
+        <if test="username != null">
+            AND u.username = #{username}
+        </if>
+    </select>
+    
+    <select id="get" resultMap="userDetailRM">
+       SELECT 
+            <include refid="user" />,
+            <include refid="com.bsg.dbscale.dao.dao.RoleDAO.role" />,
+            <include refid="com.bsg.dbscale.dao.dao.GroupDAO.group_p1" />
+        FROM tbl_user u 
+                LEFT JOIN tbl_group_user gu ON u.username = gu.username 
+                LEFT JOIN tbl_group g ON gu.group_id = g.id, 
+            tbl_role r
+        WHERE r.id = u.role_id
+            AND u.username = #{username}
+    </select>
+    
+    <insert id="save" parameterType="com.bsg.dbscale.dao.domain.UserDO">
+        INSERT INTO tbl_user
+        (
+            username,
+            auth_type,
+            password,
+            name,
+            telephone,
+            email,
+            company,
+            emer_contact,
+            emer_tel,
+            is_enabled,
+            role_id,
+            og_auto_examine,
+            og_auto_execute,
+            gmt_create,
+            creator
+        )
+        VALUES
+        (
+            #{username},
+            #{authType},
+            #{password},
+            #{name},
+            #{telephone},
+            #{email},
+            #{company},
+            #{emerContact},
+            #{emerTel},
+            #{enabled},
+            #{roleId},
+            #{ogAutoExamine},
+            #{ogAutoExecute},
+            #{gmtCreate},
+            #{creator}
+        )
+    </insert>
+    
+    <update id="update" parameterType="com.bsg.dbscale.dao.domain.UserDO">
+        UPDATE tbl_user
+        <set>
+            name = #{name},
+            telephone = #{telephone},
+            email = #{email},
+            company = #{company},
+            emer_contact = #{emerContact},
+            emer_tel = #{emerTel},
+            role_id = #{roleId},
+            og_auto_examine = #{ogAutoExamine},
+            og_auto_execute = #{ogAutoExecute},
+            gmt_modified = #{gmtModified},
+            editor = #{editor}
+        </set>
+        WHERE username = #{username}
+    </update>
+
+    <update id="updateEnabled" parameterType="com.bsg.dbscale.dao.domain.UserDO">
+        UPDATE tbl_user
+        <set>
+            is_enabled = #{enabled},
+            gmt_modified = #{gmtModified},
+            editor = #{editor}
+        </set>
+        WHERE username = #{username}
+    </update>
+    
+    <update id="updatePwd" parameterType="com.bsg.dbscale.dao.domain.UserDO">
+        UPDATE tbl_user
+        <set>
+            password = #{password},
+            gmt_modified = #{gmtModified},
+            editor = #{editor}
+        </set>
+        WHERE username = #{username}
+    </update>
+
+</mapper>

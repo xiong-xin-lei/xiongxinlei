@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.ServGroupDAO">
+    <resultMap id="servGroupRM" type="com.bsg.dbscale.dao.domain.ServGroupDO">
+        <id property="id" column="sg_id" />
+        <result property="category" column="sg_category" />
+        <result property="businessSubsystemId" column="sg_business_subsystem_id" />
+        <result property="businessAreaId" column="sg_business_area_id" />
+        <result property="sysArchitecture" column="og_sys_architecture" />
+        <result property="name" column="sg_name" />
+        <result property="owner" column="sg_owner" />
+        <result property="flag" column="sg_flag" />
+        <result property="orderGroupId" column="order_group_id" />
+        <result property="gmtCreate" column="sg_gmt_create" />
+        <result property="creator" column="sg_creator" />
+        <association property="businessSubsystem" 
+            resultMap="com.bsg.dbscale.dao.dao.BusinessSubsystemDAO.businessSubsysDetailRM"/>
+        <association property="businessArea" 
+            resultMap="com.bsg.dbscale.dao.dao.BusinessAreaDAO.areaRM"/>
+        <collection property="servs" resultMap="com.bsg.dbscale.dao.dao.ServDAO.servRM"> 
+        </collection>
+    </resultMap>
+    
+    <sql id="serv_group">
+        sg.id AS sg_id,
+        sg.category AS sg_category,
+        sg.business_subsystem_id AS sg_business_subsystem_id,
+        sg.business_area_id AS sg_business_area_id,
+        sg.sys_architecture AS og_sys_architecture,
+        sg.name AS sg_name,
+        sg.owner AS sg_owner,
+        sg.flag AS sg_flag,
+        sg.order_group_id,
+        sg.gmt_create AS sg_gmt_create
+    </sql>
+    
+    <select id="list" resultMap="servGroupRM">
+        SELECT 
+            <include refid="serv_group" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessSubsystemDAO.businessSubsys" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessSystemDAO.businessSys" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessAreaDAO.area" />,
+            <include refid="com.bsg.dbscale.dao.dao.ServDAO.serv" />,
+            <include refid="com.bsg.dbscale.dao.dao.UnitDAO.unit" />
+        FROM tbl_serv_group sg,
+            tbl_business_subsystem subsys, 
+            tbl_business_system sys,
+            tbl_business_area area, 
+            tbl_serv serv,
+            tbl_unit unit
+        WHERE sg.business_subsystem_id = subsys.id
+            AND subsys.business_system_id = sys.id 
+            AND sg.business_area_id = area.id 
+            AND serv.serv_group_id = sg.id
+            AND unit.serv_id = serv.id
+        <if test="category != null">
+            AND sg.category = #{category}
+        </if>
+        <if test="flag != null">
+            AND sg.flag = #{flag}
+        </if>
+        <if test="siteId != null">
+            AND area.site_id = #{siteId}
+        </if>
+        ORDER BY sg.gmt_create DESC
+    </select>
+    
+    <select id="getByOrderGroupId" resultMap="servGroupRM">
+        SELECT 
+            <include refid="serv_group" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessSubsystemDAO.businessSubsys" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessSystemDAO.businessSys" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessAreaDAO.area" />,
+            <include refid="com.bsg.dbscale.dao.dao.ServDAO.serv" />,
+            <include refid="com.bsg.dbscale.dao.dao.UnitDAO.unit" />
+        FROM tbl_serv_group sg,
+            tbl_business_subsystem subsys, 
+            tbl_business_system sys,
+            tbl_business_area area, 
+            tbl_serv serv,
+            tbl_unit unit
+        WHERE sg.business_subsystem_id = subsys.id
+            AND subsys.business_system_id = sys.id 
+            AND sg.business_area_id = area.id 
+            AND serv.serv_group_id = sg.id
+            AND unit.serv_id = serv.id
+            AND sg.order_group_id = #{orderGroupId}
+        ORDER BY unit.type, unit.relate_id      
+    </select>
+    
+    <select id="getByName" resultMap="servGroupRM">
+        SELECT 
+            <include refid="serv_group" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessSubsystemDAO.businessSubsys" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessSystemDAO.businessSys" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessAreaDAO.area" />,
+            <include refid="com.bsg.dbscale.dao.dao.ServDAO.serv" />,
+            <include refid="com.bsg.dbscale.dao.dao.UnitDAO.unit" />
+        FROM tbl_serv_group sg,
+            tbl_business_subsystem subsys, 
+            tbl_business_system sys,
+            tbl_business_area area, 
+            tbl_serv serv,
+            tbl_unit unit
+        WHERE sg.business_subsystem_id = subsys.id
+            AND subsys.business_system_id = sys.id 
+            AND sg.business_area_id = area.id 
+            AND serv.serv_group_id = sg.id
+            AND unit.serv_id = serv.id
+            AND sg.name = #{name}
+        ORDER BY unit.type, unit.relate_id  
+    </select>
+    
+    <select id="get" resultMap="servGroupRM">
+        SELECT 
+            <include refid="serv_group" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessSubsystemDAO.businessSubsys" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessSystemDAO.businessSys" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessAreaDAO.area" />,
+            <include refid="com.bsg.dbscale.dao.dao.ServDAO.serv" />,
+            <include refid="com.bsg.dbscale.dao.dao.UnitDAO.unit" />
+        FROM tbl_serv_group sg,
+            tbl_business_subsystem subsys, 
+            tbl_business_system sys,
+            tbl_business_area area, 
+            tbl_serv serv,
+            tbl_unit unit
+        WHERE sg.business_subsystem_id = subsys.id
+            AND subsys.business_system_id = sys.id 
+            AND sg.business_area_id = area.id 
+            AND serv.serv_group_id = sg.id
+            AND unit.serv_id = serv.id
+            AND sg.id = #{id}
+        ORDER BY unit.type, unit.relate_id    
+    </select>
+    
+    <select id="countBySubsystemId" resultType="int">
+        SELECT COUNT(*)
+        FROM tbl_serv_group
+        WHERE business_subsystem_id = #{businessSubsystemId}
+    </select>
+    
+    <select id="countByBusinessAreaId" resultType="int">
+        SELECT COUNT(*)
+        FROM tbl_serv_group
+        WHERE business_area_id = #{businessAreaId}
+    </select>
+    
+    <insert id="save" parameterType="com.bsg.dbscale.dao.domain.ServGroupDO">
+        INSERT INTO tbl_serv_group
+        (
+            id,
+            category,
+            business_subsystem_id,  
+            business_area_id,     
+            sys_architecture,     
+            name,
+            owner,
+            flag,
+            order_group_id,
+            gmt_create
+        )
+        VALUES
+        (
+            #{id},
+            #{category},
+            #{businessSubsystemId},
+            #{businessAreaId}, 
+            #{sysArchitecture},        
+            #{name},
+            #{owner},
+            #{flag},
+            #{orderGroupId},
+            #{gmtCreate}
+        )
+    </insert>
+    
+    <update id="update">
+        UPDATE tbl_serv_group
+        <set>
+            business_subsystem_id = #{businessSubsystemId},
+            owner = #{owner},
+            flag = #{flag},
+            order_group_id = #{orderGroupId}
+        </set>    
+        WHERE id = #{id}    
+    </update>
+    
+    <delete id="remove">
+        DELETE FROM tbl_serv_group
+        WHERE id = #{id}
+    </delete>
+    
+</mapper>

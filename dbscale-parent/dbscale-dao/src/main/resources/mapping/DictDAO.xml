@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.DictDAO">
+    <resultMap id="dictRM" type="com.bsg.dbscale.dao.domain.DictDO">
+        <id property="dictTypeCode" column="dict_dict_type_code" />
+        <id property="code" column="dict_code" />
+        <result property="name" column="dict_name" />
+        <result property="sequence" column="dict_sequence" />
+        <result property="gmtCreate" column="dict_gmt_create" />
+        <result property="creator" column="dict_creator" />
+    </resultMap>
+    
+    <sql id="dict">
+        dict.dict_type_code AS dict_dict_type_code,
+        dict.code AS dict_code,
+        dict.name AS dict_name,
+        dict.sequence AS dict_sequence,
+        dict.gmt_create AS dict_gmt_create,
+        dict.creator AS dict_creator
+    </sql>
+
+    <select id="get" resultMap="dictRM">
+        SELECT 
+            <include refid="dict" />
+        FROM tbl_dict dict
+        WHERE dict_type_code = #{dictTypeCode}
+            AND code = #{code}
+    </select>
+    
+    <select id="countByNameAndDictTypeCode" resultType="int">
+        SELECT COUNT(*)
+        FROM tbl_dict
+        WHERE dict_type_code = #{dictTypeCode}
+            AND name = #{name}
+    </select>
+    
+    <update id="update" parameterType="com.bsg.dbscale.dao.domain.DictDO">
+        UPDATE tbl_dict
+        <set>
+            name = #{name},
+            sequence = #{sequence}
+        </set>
+        WHERE dict_type_code = #{dictTypeCode}
+            AND code = #{code}
+    </update>
+
+</mapper>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.AppDAO">
+	<resultMap id="appRM" type="com.bsg.dbscale.dao.domain.AppDO">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="type" column="type" />
+		<result property="code" column="code" />
+		<result property="icon" column="icon" />
+		<result property="pos" column="pos" />
+		<result property="sequence" column="sequence" />
+		<result property="tabletopSeq" column="tabletop_seq" />
+		<result property="rowSeq" column="row_seq" />
+		<result property="pid" column="pid" />
+        <collection property="childrens" column="id" select="listByPid" ofType="com.bsg.dbscale.dao.domain.AppDO">
+        </collection>
+	</resultMap>
+    
+    <resultMap id="appRoleRM" type="com.bsg.dbscale.dao.domain.AppDO">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <result property="type" column="type" />
+        <result property="code" column="code" />
+        <result property="icon" column="icon" />
+        <result property="pos" column="pos" />
+        <result property="sequence" column="sequence" />
+        <result property="tabletopSeq" column="tabletop_seq" />
+        <result property="rowSeq" column="row_seq" />
+        <result property="pid" column="pid" />
+        <collection property="childrens" column="{pid=id, roleId=role_id}" select="listByPidAndRoleId" ofType="com.bsg.dbscale.dao.domain.AppDO">
+        </collection>
+    </resultMap>
+    
+	<select id="listByPid" resultMap="appRM">
+        SELECT *
+        FROM tbl_app
+        WHERE pid = #{pid}
+        ORDER BY sequence, row_seq, tabletop_seq;
+	</select>
+    
+    <select id="listByPidAndRoleId" resultMap="appRoleRM">
+        SELECT app.*,#{roleId} as role_id
+        FROM tbl_app app, 
+            tbl_role_cfg_app a
+        WHERE app.id = a.app_id
+            AND app.pid = #{pid}
+            AND a.role_id= #{roleId}
+        ORDER BY app.sequence, app.row_seq, app.tabletop_seq;
+    </select>
+</mapper>

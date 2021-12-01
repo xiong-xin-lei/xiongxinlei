@@ -1,0 +1,12 @@
+所属业务区,集群名称,高可用标签,NFS地址,NFS源目录,包含软件,描述,断言
+0001测试业务区专用,LXK集群1勿动,ha,192.168.49.12,/opt/upload_images,MySQL;CMHA,描述1,1
+0001测试业务区专用,LXK集群2勿动,ha,192.168.49.12,/opt/upload_images,MySQL,,1
+0001测试业务区专用,LXK集群3勿动,ha,192.168.49.12,/opt/upload_images,MySQL;CMHA;ProxySQL,描述3,1
+null,LXK集群4勿动,ha,192.168.49.12,/opt/upload_images,MySQL;CMHA;ProxySQL,描述4,2
+0001测试业务区专用,,ha,192.168.49.12,/opt/upload_images,MySQL;CMHA;ProxySQL,描述5,2
+0001测试业务区专用,LXK集群6勿动,,192.168.49.12,/opt/upload_images,MySQL;CMHA;ProxySQL,描述6,2
+0001测试业务区专用,LXK集群7勿动,ha,,/opt/upload_images,MySQL;CMHA;ProxySQL,描述7,2
+0001测试业务区专用,LXK集群8勿动,ha,192.168.49.12,,MySQL,描述8,2
+0001测试业务区专用,LXK集群9勿动,ha,192.168.49.12,/opt/upload_images,null,描述9,2
+0001测试业务区专用,LXK集群1勿动,ha,192.168.49.12,/opt/upload_images,MySQL,描述10,3
+0001测试业务区专用,LXK集群11勿动,ha,192.168.42229.12,/opt/upload_images,MySQL,描述11,2

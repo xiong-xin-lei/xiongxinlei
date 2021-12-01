@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.GroupUserDAO">
+
+    <select id="countByGroupIdAndUsername" resultType="int">
+        SELECT COUNT(*)
+        FROM tbl_group_user
+        WHERE group_id = #{groupId}
+            AND username = #{username}
+    </select>
+    
+    <insert id="save">
+        INSERT INTO tbl_group_user
+        (
+            group_id,
+            username
+        )
+        VALUES
+        (
+            #{groupId},
+            #{username}
+        )
+    </insert>
+    
+    <delete id="remove">
+        DELETE FROM tbl_group_user
+        WHERE group_id = #{groupId}
+            AND username = #{username}
+    </delete>
+    
+    <delete id="removeByGroupId">
+        DELETE FROM tbl_group_user
+        WHERE group_id = #{groupId}
+    </delete>
+    
+</mapper>

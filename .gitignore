@@ -1,0 +1,6 @@
+doc/~$*
+.DS_Store
+
+docker-build/dbscale/
+docker-build/sql/
+docker-build/war/

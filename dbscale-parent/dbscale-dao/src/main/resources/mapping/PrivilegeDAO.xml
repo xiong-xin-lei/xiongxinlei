@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.PrivilegeDAO">
+	<resultMap id="privilegeRM"
+		type="com.bsg.dbscale.dao.domain.PrivilegeDO">
+		<id property="code" column="code" />
+		<result property="description" column="description" />
+		<result property="enabled" column="is_enabled" />
+		<result property="global" column="is_global" />
+		<result property="sequence" column="sequence" />
+	</resultMap>
+
+	<select id="list" resultMap="privilegeRM">
+		SELECT code,
+		description,
+		is_enabled,
+		is_global,
+		sequence
+		FROM tbl_privilege
+		<where>
+			<if test="enabled != null">
+				AND is_enabled = #{enabled}
+			</if>
+			<if test="global != null">
+				AND is_global = #{global}
+			</if>
+		</where>
+		ORDER BY sequence ASC
+	</select>
+
+</mapper>

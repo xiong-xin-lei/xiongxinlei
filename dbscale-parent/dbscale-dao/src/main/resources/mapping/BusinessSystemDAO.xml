@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.BusinessSystemDAO">
+    <resultMap id="businessSysRM" type="com.bsg.dbscale.dao.domain.BusinessSystemDO">
+        <id property="id" column="sys_id" />
+        <result property="name" column="sys_name" />
+        <result property="enabled" column="sys_is_enabled" />
+        <result property="description" column="sys_description" />
+        <result property="gmtCreate" column="sys_gmt_create" />
+        <result property="owner" column="sys_owner" />
+    </resultMap>
+    
+    <sql id="businessSys">
+        sys.id AS sys_id,
+        sys.name AS sys_name,
+        sys.is_enabled AS sys_is_enabled,
+        sys.description AS sys_description,
+        sys.gmt_create AS sys_gmt_create,
+        sys.owner AS sys_owner
+    </sql>
+
+    <select id="list" resultMap="businessSysRM">
+        SELECT 
+            <include refid="businessSys" />
+        FROM tbl_business_system sys
+        WHERE sys.owner = #{owner} 
+        <if test="enabled != null">
+            AND sys.is_enabled = #{enabled}
+        </if>
+    </select>
+    
+    <select id="get" resultMap="businessSysRM">
+       SELECT 
+            <include refid="businessSys" />         
+        FROM tbl_business_system sys
+        WHERE sys.id = #{id}
+    </select>
+    
+    <select id="getByNameAndOwner" resultMap="businessSysRM">
+       SELECT 
+            <include refid="businessSys" />         
+        FROM tbl_business_system sys
+        WHERE sys.owner = #{owner}
+            AND sys.name = #{name}
+    </select>
+    
+    <insert id="save" parameterType="com.bsg.dbscale.dao.domain.BusinessSystemDO">
+        INSERT INTO tbl_business_system
+        (
+            id,
+            name,  
+            is_enabled,       
+            description,
+            gmt_create,
+            owner
+        )
+        VALUES
+        (
+            #{id},
+            #{name},  
+            #{enabled},      
+            #{description},
+            #{gmtCreate},
+            #{owner}
+        )
+    </insert>
+    
+    <update id="update">
+        UPDATE tbl_business_system
+        <set>
+            name = #{name},
+            description = #{description}
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <update id="updateEnabled">
+        UPDATE tbl_business_system
+        <set>
+            is_enabled = #{enabled}
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="remove">
+        DELETE FROM tbl_business_system
+        WHERE id = #{id}
+    </delete>
+
+</mapper>

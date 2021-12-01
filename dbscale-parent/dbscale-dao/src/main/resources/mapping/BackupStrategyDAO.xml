@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.BackupStrategyDAO">
+    <resultMap id="backupStrategyRM" type="com.bsg.dbscale.dao.domain.BackupStrategyDO">
+        <id property="id" column="strategy_id" />
+        <result property="servGroupId" column="strategy_serv_group_id" />
+        <result property="backupStorageType" column="backup_storage_type" />
+        <result property="type" column="strategy_type" />
+        <result property="tables" column="strategy_tables" />
+        <result property="cronExpression" column="strategy_cron_expression" />
+        <result property="fileRetentionNum" column="strategy_file_retention_num" />
+        <result property="enabled" column="strategy_is_enabled" />
+        <result property="description" column="strategy_description" />
+        <result property="gmtCreate" column="strategy_gmt_create" />
+        <result property="creator" column="strategy_creator" />
+        <association property="servGroup" resultMap="com.bsg.dbscale.dao.dao.ServGroupDAO.servGroupRM"/>
+    </resultMap>
+    
+    <sql id="backupStrategy">
+        strategy.id AS strategy_id,
+        strategy.serv_group_id AS strategy_serv_group_id,
+        strategy.backup_storage_type,
+        strategy.type AS strategy_type,
+        strategy.tables AS strategy_tables,
+        strategy.cron_expression AS strategy_cron_expression,
+        strategy.file_retention_num AS strategy_file_retention_num,
+        strategy.is_enabled AS strategy_is_enabled,
+        strategy.description AS strategy_description,
+        strategy.gmt_create AS strategy_gmt_create,
+        strategy.creator AS strategy_creator
+    </sql>
+    
+    <select id="list" resultMap="backupStrategyRM">
+        SELECT 
+            <include refid="backupStrategy" />,
+            <include refid="com.bsg.dbscale.dao.dao.ServGroupDAO.serv_group" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessSubsystemDAO.businessSubsys" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessSystemDAO.businessSys" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessAreaDAO.area" />
+        FROM tbl_backup_strategy strategy,
+            tbl_serv_group sg,
+            tbl_business_subsystem subsys, 
+            tbl_business_system sys,
+            tbl_business_area area
+        WHERE strategy.serv_group_id = sg.id
+            AND sg.business_subsystem_id = subsys.id
+            AND subsys.business_system_id = sys.id 
+            AND sg.business_area_id = area.id 
+            <if test="servGroupId != null">
+                AND strategy.serv_group_id = #{servGroupId}
+            </if>
+            <if test="enabled != null">
+                AND strategy.is_enabled = #{enabled}
+            </if>
+            <if test="siteId != null">
+                AND area.site_id = #{siteId}
+            </if>
+    </select>
+    
+    <select id="get" resultMap="backupStrategyRM">
+        SELECT 
+            <include refid="backupStrategy" />,
+            <include refid="com.bsg.dbscale.dao.dao.ServGroupDAO.serv_group" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessSubsystemDAO.businessSubsys" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessSystemDAO.businessSys" />,
+            <include refid="com.bsg.dbscale.dao.dao.BusinessAreaDAO.area" />
+        FROM tbl_backup_strategy strategy,
+            tbl_serv_group sg,
+            tbl_business_subsystem subsys, 
+            tbl_business_system sys,
+            tbl_business_area area
+        WHERE strategy.serv_group_id = sg.id
+            AND sg.business_subsystem_id = subsys.id
+            AND subsys.business_system_id = sys.id 
+            AND sg.business_area_id = area.id 
+            AND strategy.id = #{id}
+    </select>
+    
+    <insert id="save" parameterType="com.bsg.dbscale.dao.domain.BackupStrategyDO">
+        INSERT INTO tbl_backup_strategy
+        (
+            id,
+            serv_group_id,
+            backup_storage_type,
+            type,
+            tables,
+            cron_expression,
+            file_retention_num,
+            is_enabled,
+            description,
+            gmt_create,
+            creator
+        )
+        VALUES
+        (
+            #{id},
+            #{servGroupId},
+            #{backupStorageType},
+            #{type},
+            #{tables},
+            #{cronExpression},
+            #{fileRetentionNum},
+            #{enabled},
+            #{description},
+            #{gmtCreate},
+            #{creator}
+        )
+    </insert>
+    
+    <update id="update">
+        UPDATE tbl_backup_strategy
+        <set>
+            backup_storage_type = #{backupStorageType},
+            type = #{type},
+            tables = #{tables},
+            cron_expression = #{cronExpression},
+            file_retention_num = #{fileRetentionNum},
+            description = #{description}
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <update id="updateEnabled">
+        UPDATE tbl_backup_strategy
+        <set>
+            is_enabled = #{enabled}
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="remove">
+        DELETE FROM tbl_backup_strategy
+        WHERE id = #{id}
+    </delete>
+    
+    <delete id="removeByServGroupId">
+        DELETE FROM tbl_backup_strategy
+        WHERE serv_group_id = #{servGroupId}
+    </delete>
+</mapper>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.OrderDAO">
+    <resultMap id="orderRM" type="com.bsg.dbscale.dao.domain.OrderDO">
+        <id property="id" column="order_id" />
+        <result property="orderGroupId" column="order_group_id" />
+        <result property="type" column="order_type" />
+        <result property="majorVersion" column="order_major_version" />
+        <result property="minorVersion" column="order_minor_version" />
+        <result property="patchVersion" column="order_patch_version" />
+        <result property="buildVersion" column="order_build_version" />
+        <result property="archMode" column="order_arch_mode" />
+        <result property="unitCnt" column="order_unit_cnt" />
+        <result property="cpuCnt" column="order_cpu_cnt" />
+        <result property="memSize" column="order_mem_size" />
+        <result property="diskType" column="order_disk_type" />
+        <result property="dataSize" column="order_data_size" />
+        <result property="logSize" column="order_log_size" />
+        <result property="port" column="order_port" />
+        <result property="cfg" column="order_cfg" />
+        <result property="cnt" column="order_cnt" />
+        <result property="clusterHA" column="order_cluster_ha" />
+        <result property="hostHA" column="order_host_ha" />
+    </resultMap>
+    
+    <sql id="order">
+        o.id AS order_id,
+		o.order_group_id,
+		o.type AS order_type,
+		o.major_version AS order_major_version,
+		o.minor_version AS order_minor_version,
+		o.patch_version AS order_patch_version,
+		o.build_version AS order_build_version,
+		o.arch_mode AS order_arch_mode,
+		o.unit_cnt AS order_unit_cnt,
+		o.cpu_cnt AS order_cpu_cnt,
+		o.mem_size AS order_mem_size,
+		o.disk_type AS order_disk_type,
+		o.data_size AS order_data_size,
+		o.log_size AS order_log_size,
+		o.port AS order_port,
+		o.cfg AS order_cfg,
+		o.cnt AS order_cnt,
+        o.cluster_ha AS order_cluster_ha,
+        o.host_ha AS order_host_ha
+    </sql>
+    
+    <select id="countByScale" resultType="int">
+        SELECT COUNT(*)
+        FROM tbl_order
+        WHERE type = #{type}
+            AND cpu_cnt = #{cpuCnt}
+            AND mem_size = #{memSize}
+    </select>
+    
+    <insert id="save" parameterType="com.bsg.dbscale.dao.domain.OrderDO">
+        INSERT INTO tbl_order
+        (
+            id,
+	        order_group_id,
+	        type,
+	        major_version,
+	        minor_version,
+	        patch_version,
+	        build_version,
+	        arch_mode,
+	        unit_cnt,
+	        cpu_cnt,
+	        mem_size,
+	        disk_type,
+	        data_size,
+	        log_size,
+	        port,
+	        cfg,
+	        cnt,
+            cluster_ha,
+            host_ha
+        )
+        VALUES
+        (
+            #{id},
+            #{orderGroupId},
+            #{type},
+            #{majorVersion},
+            #{minorVersion},
+            #{patchVersion},
+            #{buildVersion},
+            #{archMode},
+            #{unitCnt},
+            #{cpuCnt},
+            #{memSize},
+            #{diskType},
+            #{dataSize},
+            #{logSize},
+            #{port},
+            #{cfg},
+            #{cnt},
+            #{clusterHA},
+            #{hostHA}
+        )    
+    </insert>
+    
+    <insert id="update">
+        UPDATE tbl_order
+        <set>
+            major_version = #{majorVersion},
+            minor_version = #{minorVersion},
+            patch_version = #{patchVersion},
+            build_version = #{buildVersion},
+            arch_mode = #{archMode},
+            unit_cnt = #{unitCnt},
+            cpu_cnt = #{cpuCnt},
+            mem_size = #{memSize},
+            disk_type = #{diskType},
+            data_size = #{dataSize},
+            log_size = #{logSize},
+            port = #{port},
+            cfg = #{cfg},
+            cnt = #{cnt},
+            cluster_ha = #{clusterHA},
+            host_ha = #{hostHA}
+        </set>
+        WHERE id = #{id}
+    </insert>
+    
+    <delete id="removeByOrderGroupId">
+        DELETE FROM tbl_order
+        WHERE order_group_id = #{orderGroupId}
+    </delete>
+</mapper>

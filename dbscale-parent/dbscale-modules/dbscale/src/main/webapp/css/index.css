@@ -1,0 +1,100 @@
+@CHARSET "UTF-8";
+body {
+    background-color: #f5f7f9;
+}
+
+.svgColor, .suSvgColor {
+    margin-right: 10px;
+}
+
+.suSvgColor g, .suSvgColor path {
+    fill: #8a8ea5;
+}
+
+.svgColor g, .svgColor path {
+    fill: #8a8ea5;
+}
+
+.el-tabs__header {
+    margin: 0;
+}
+
+.el-submenu__title {
+    background-color: #2b2e3b !important;
+}
+
+.el-submenu__title:hover {
+    color: #ffffff !important;
+}
+
+.el-submenu__title:hover .svgColor g, .el-submenu__title:hover .svgColor path {
+    fill: #ffffff;
+}
+
+.is-opened .el-submenu__title {
+    color: #ffffff !important;
+}
+
+.is-opened .el-submenu__title .svgColor g, .is-opened .el-submenu__title path {
+    fill: #ffffff;
+}
+
+.el-menu-item.is-active {
+    color: #ffffff;
+    background-color: #1890ff !important;
+}
+
+.el-menu-item.is-active .suSvgColor g, .el-menu-item.is-active .suSvgColor path {
+    fill: #ffffff;
+}
+
+.el-menu-item:hover {
+    color: #ffffff !important;
+    background-color: #21232c !important;
+}
+
+.el-menu-item:hover .suSvgColor g, .el-menu-item:hover .suSvgColor path {
+    fill: #ffffff;
+}
+
+.el-menu-item.is-active:hover {
+    color: #ffffff;
+    background-color: #1890ff !important;
+}
+
+.el-menu-item.is-active:hover .suSvgColor g, .el-menu-item.is-active:hover .suSvgColor path {
+    fill: #ffffff;
+}
+
+.el-menu-item-group__title {
+    padding: 0;
+}
+
+.menu-btn {
+    padding: 20px 0;
+    position: absolute;
+    right: 0;
+    top: 45%;
+    background-color: #f5f7f9;
+    border: none;
+    border-radius: 4px 0 0 4px;
+}
+
+.menu-btn:hover {
+    border: none;
+}
+
+iframe {
+    border: none;
+}
+
+.prompt {
+    width: 100%;
+    text-align: center;
+}
+
+.tooltipText {
+    display: inline-block;
+    width: 65px;
+    text-align: right;
+}

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.BusinessAreaDAO">
+    <resultMap id="areaRM" type="com.bsg.dbscale.dao.domain.BusinessAreaDO">
+        <id property="id" column="area_id" />
+        <result property="name" column="area_name" />
+        <result property="enabled" column="area_is_enabled" />
+        <result property="description" column="area_description" />
+        <result property="siteId" column="area_site_id" />
+        <result property="gmtCreate" column="area_gmt_create" />
+        <result property="creator" column="area_creator" />
+    </resultMap>
+    
+    <sql id="area">
+        area.id AS area_id,
+        area.name AS area_name,
+        area.is_enabled AS area_is_enabled,
+        area.description AS area_description,
+        area.site_id AS area_site_id,
+        area.gmt_create AS area_gmt_create,
+        area.creator AS area_creator
+    </sql>
+    
+    <select id="list" resultMap="areaRM">
+        SELECT 
+            <include refid="area" />
+        FROM tbl_business_area area 
+        <trim prefix="WHERE" prefixOverrides="AND | OR ">
+            <if test="siteId != null">
+                AND area.site_id = #{siteId}
+            </if>
+            <if test="enabled != null">
+                AND area.is_enabled = #{enabled}
+            </if>
+        </trim>
+    </select>
+    
+    <select id="get" resultMap="areaRM">
+        SELECT 
+            <include refid="area" />
+        FROM tbl_business_area area 
+        WHERE area.id = #{id}
+    </select>
+    
+    <select id="getByNameAndSiteId" resultMap="areaRM">
+        SELECT 
+            <include refid="area" />
+        FROM tbl_business_area area
+        WHERE area.site_id = #{siteId}
+            AND area.name = #{name}
+    </select>
+    
+    <insert id="save" parameterType="com.bsg.dbscale.dao.domain.BusinessAreaDO">
+        INSERT INTO tbl_business_area
+        (
+            id,
+            name,
+            is_enabled,
+            description,
+            site_id,
+            gmt_create,
+            creator
+        )
+        VALUES
+        (
+            #{id},
+            #{name},
+            #{enabled},
+            #{description},
+            #{siteId},
+            #{gmtCreate},
+            #{creator}
+        )
+    </insert>
+    
+    <update id="update">
+        UPDATE tbl_business_area
+        <set>
+            name = #{name},
+            description = #{description}
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <update id="updateEnabled">
+        UPDATE tbl_business_area
+        <set>
+            is_enabled = #{enabled}
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="remove">
+        DELETE FROM tbl_business_area
+        WHERE id = #{id}
+    </delete>
+</mapper>

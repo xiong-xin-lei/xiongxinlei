@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.HostDAO">
+    <resultMap id="hostRM" type="com.bsg.dbscale.dao.domain.HostDO">
+        <id property="id" column="host_id" />
+        <result property="clusterId" column="host_cluster_id" />
+        <result property="ip" column="host_ip" />
+        <result property="room" column="host_room" />
+        <result property="seat" column="host_seat" />
+        <result property="hddPath" column="host_hdd_path" />
+        <result property="ssdPath" column="host_ssd_path" />
+        <result property="remoteStorageId" column="host_remote_storage_id" />
+        <result property="maxUsage" column="host_max_usage" />
+        <result property="role" column="host_role" />
+        <result property="relateId" column="host_relate_id" />
+        <result property="description" column="host_description" />
+        <result property="gmtCreate" column="host_gmt_create" />
+        <result property="creator" column="host_creator" />
+    </resultMap>
+
+    <sql id="host">
+       host.id AS host_id,
+       host.cluster_id AS host_cluster_id,
+       host.ip AS host_ip,
+       host.room AS host_room,
+       host.seat AS host_seat,
+       host.hdd_path AS host_hdd_path,
+       host.ssd_path AS host_ssd_path,
+       host.remote_storage_id AS host_remote_storage_id,
+       host.max_usage AS host_max_usage,
+       host.relate_id AS host_relate_id,
+       host.role AS host_role,
+       host.description AS host_description,
+       host.gmt_create AS host_gmt_create,
+       host.creator AS host_creator
+    </sql>
+    
+    <select id="list" resultMap="hostRM">
+        SELECT 
+            <include refid="host" />
+        FROM tbl_host host
+        <trim prefix="WHERE" prefixOverrides="AND | OR ">
+            <if test="clusterId != null">
+                AND host.cluster_id = #{clusterId}
+            </if>
+        </trim>
+        ORDER BY host.gmt_create DESC
+    </select>
+    
+    <select id="get" resultMap="hostRM">
+        SELECT 
+            <include refid="host" />
+        FROM tbl_host host 
+        WHERE host.id = #{id}          
+    </select>
+    
+    <select id="getByIdOrIp" resultMap="hostRM">
+        SELECT 
+            <include refid="host" />
+        FROM tbl_host host 
+        WHERE host.id = #{idOrIp}
+            OR host.ip = #{idOrIp}          
+    </select>
+    
+    <select id="getByRelateId" resultMap="hostRM">
+        SELECT 
+            <include refid="host" />
+        FROM tbl_host host 
+        WHERE host.relate_id = #{relateId}
+    </select>
+    
+    <select id="countByIp" resultType="int">
+        SELECT COUNT(*) 
+        FROM tbl_host
+        WHERE ip = #{ip}
+    </select>
+    
+    <insert id="save" parameterType="com.bsg.dbscale.dao.domain.HostDO">
+        INSERT INTO tbl_host
+        (
+            id,
+            cluster_id,
+            ip,
+            room,
+            seat,
+            hdd_path,
+            ssd_path,
+            remote_storage_id,
+            max_usage,
+            role,
+            relate_id,
+            description,
+            gmt_create,
+            creator
+        )
+        VALUES
+        (
+            #{id},
+            #{clusterId},
+            #{ip},
+            #{room},
+            #{seat},
+            #{hddPath},
+            #{ssdPath},
+            #{remoteStorageId},
+            #{maxUsage},
+            #{role},
+            #{relateId},
+            #{description},
+            #{gmtCreate},
+            #{creator}
+        )
+    </insert>
+    
+    <update id="update">
+        UPDATE tbl_host
+        <set>
+            cluster_id = #{clusterId},
+            ip = #{ip},
+            room = #{room},
+            seat = #{seat},
+            hdd_path = #{hddPath},
+            ssd_path = #{ssdPath},
+            remote_storage_id = #{remoteStorageId},
+            max_usage = #{maxUsage},
+            role = #{role},
+            relate_id = #{relateId},
+            description = #{description}
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateRelateId">
+        UPDATE tbl_host
+        <set>
+            relate_id = #{relateId}
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="remove">
+        DELETE FROM tbl_host
+        WHERE id = #{id}
+    </delete>
+    
+</mapper>

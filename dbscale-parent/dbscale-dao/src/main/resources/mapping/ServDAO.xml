@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.ServDAO">
+    <resultMap id="servRM" type="com.bsg.dbscale.dao.domain.ServDO">
+        <id property="id" column="serv_id" />
+        <result property="servGroupId" column="serv_group_id" />
+        <result property="type" column="serv_type" />
+        <result property="majorVersion" column="serv_major_version" />
+        <result property="minorVersion" column="serv_minor_version" />
+        <result property="patchVersion" column="serv_patch_version" />
+        <result property="buildVersion" column="serv_build_version" />
+        <result property="archMode" column="serv_arch_mode" />
+        <result property="unitCnt" column="serv_unit_cnt" />
+        <result property="cpuCnt" column="serv_cpu_cnt" />
+        <result property="memSize" column="serv_mem_size" />
+        <result property="diskType" column="serv_disk_type" />
+        <result property="dataSize" column="serv_data_size" />
+        <result property="logSize" column="serv_log_size" />
+        <result property="port" column="serv_port" />
+        <result property="relateId" column="serv_relate_id" />
+        <result property="monitorFlag" column="serv_monitor_flag" />
+        <collection property="units" resultMap="com.bsg.dbscale.dao.dao.UnitDAO.unitRM">
+        </collection> 
+    </resultMap>
+    
+    <sql id="serv">
+        serv.id AS serv_id,
+		serv.serv_group_id,
+		serv.type AS serv_type,
+		serv.major_version AS serv_major_version,
+		serv.minor_version AS serv_minor_version,
+		serv.patch_version AS serv_patch_version,
+		serv.build_version AS serv_build_version,
+		serv.arch_mode AS serv_arch_mode,
+		serv.unit_cnt AS serv_unit_cnt,
+		serv.cpu_cnt AS serv_cpu_cnt,
+		serv.mem_size AS serv_mem_size,
+		serv.disk_type AS serv_disk_type,
+		serv.data_size AS serv_data_size,
+		serv.log_size AS serv_log_size,
+		serv.port AS serv_port,
+		serv.relate_id AS serv_relate_id,
+        serv.monitor_flag AS serv_monitor_flag
+    </sql>
+    
+    <select id="get" resultMap="servRM">
+        SELECT 
+            <include refid="serv" />,
+            <include refid="com.bsg.dbscale.dao.dao.UnitDAO.unit" />
+        FROM tbl_serv serv,
+            tbl_unit unit
+        WHERE serv.id = unit.serv_id
+            AND serv.id = #{id}    
+    </select>
+    
+    <select id="countByScale" resultType="int">
+        SELECT COUNT(*)
+        FROM tbl_serv
+        WHERE type = #{type}
+            AND cpu_cnt = #{cpuCnt}
+            AND mem_size = #{memSize}
+    </select>
+    
+    <insert id="save" parameterType="com.bsg.dbscale.dao.domain.ServDO">
+        INSERT INTO tbl_serv
+        (
+            id,
+	        serv_group_id,
+	        type,
+	        major_version,
+	        minor_version,
+	        patch_version,
+	        build_version,
+	        arch_mode,
+	        unit_cnt,
+	        cpu_cnt,
+	        mem_size,
+	        disk_type,
+	        data_size,
+	        log_size,
+	        port,
+	        relate_id
+        )
+        VALUES
+        (
+            #{id},
+            #{servGroupId},
+            #{type},
+            #{majorVersion},
+            #{minorVersion},
+            #{patchVersion},
+            #{buildVersion},
+            #{archMode},
+            #{unitCnt},
+            #{cpuCnt},
+            #{memSize},
+            #{diskType},
+            #{dataSize},
+            #{logSize},
+            #{port},
+            #{relateId}
+        )    
+    </insert>
+    
+    <update id="update">
+        UPDATE tbl_serv
+        <set>
+            major_version = #{majorVersion},
+            minor_version = #{minorVersion},
+            patch_version = #{patchVersion},
+            build_version = #{buildVersion},
+            arch_mode = #{archMode},
+            unit_cnt = #{unitCnt},
+            cpu_cnt = #{cpuCnt},
+            mem_size = #{memSize},
+            disk_type = #{diskType},
+            data_size = #{dataSize},
+            log_size = #{logSize},
+            port = #{port}
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <update id="updateRelateId">
+        UPDATE tbl_serv
+        <set>
+            relate_id = #{relateId}
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <update id="updateMonitorFlag">
+        UPDATE tbl_serv
+        <set>
+            monitor_flag = #{monitorFlag}
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="remove">
+        DELETE FROM tbl_serv
+        WHERE id = #{id}
+    </delete>
+</mapper>

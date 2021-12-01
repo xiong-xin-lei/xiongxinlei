@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.CrontabCfgDAO">
+    <resultMap id="crontabRM" type="com.bsg.dbscale.dao.domain.CrontabCfgDO">
+        <id property="triggerName" column="trigger_name" />
+        <result property="crontab" column="crontab" />
+        <result property="description" column="description" />
+    </resultMap>
+
+    <select id="get" resultMap="crontabRM">
+        SELECT trigger_name,
+            crontab,
+            description
+        FROM tbl_crontab_config
+        WHERE trigger_name = #{triggerName} 
+    </select>
+
+</mapper>

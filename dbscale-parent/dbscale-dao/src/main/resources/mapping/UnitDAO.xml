@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.UnitDAO">
+    <resultMap id="unitRM" type="com.bsg.dbscale.dao.domain.UnitDO">
+        <id property="id" column="unit_id" />
+        <result property="servId" column="unit_serv_id" />
+        <result property="type" column="unit_type" />
+        <result property="relateId" column="unit_relate_id" />
+    </resultMap>
+    
+    <sql id="unit">
+        unit.id AS unit_id,
+        unit.serv_id AS unit_serv_id,
+        unit.type AS unit_type,
+        unit.relate_id AS unit_relate_id
+    </sql>
+    
+    <select id="get" resultMap="unitRM">
+        SELECT 
+            <include refid="unit" />
+        FROM tbl_unit unit
+        WHERE unit.id = #{id}    
+    </select>
+    
+    <insert id="save" parameterType="com.bsg.dbscale.dao.domain.UnitDO">
+        INSERT INTO tbl_unit
+        (
+            id,
+            serv_id,
+            type,
+            relate_id
+        )
+        VALUES
+        (
+            #{id},
+            #{servId},
+            #{type},
+            #{relateId}
+        )
+    </insert>
+    
+    <update id="update">
+        UPDATE tbl_unit
+        <set>
+            relate_id = #{relateId}
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="remove">
+        DELETE FROM tbl_unit
+        WHERE id = #{id}
+    </delete>
+    
+</mapper>

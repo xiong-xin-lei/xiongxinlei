@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.GroupDAO">
+    <resultMap id="groupRM" type="com.bsg.dbscale.dao.domain.GroupDO">
+        <id property="id" column="group_id" />
+        <result property="name" column="group_name" />
+        <result property="description" column="group_description" />
+        <result property="sys" column="group_is_sys" />
+        <result property="gmtCreate" column="group_gmt_create" />
+        <result property="creator" column="group_creator" />
+    </resultMap>
+    
+    <sql id="group_p1">
+        g.id AS group_id,
+        g.name AS group_name
+    </sql>
+    
+    <sql id="group">
+        <include refid="group_p1" />,
+        g.description AS group_description,
+        g.is_sys AS group_is_sys,
+        g.gmt_create AS group_gmt_create,
+        g.creator AS group_creator
+    </sql>
+    
+    <select id="list" resultMap="groupRM">
+        SELECT DISTINCT
+            <include refid="group" />
+        FROM tbl_group g 
+            LEFT JOIN tbl_group_user gu ON g.id = gu.group_id
+        <trim prefix="WHERE" prefixOverrides="AND | OR ">
+            <if test="username != null">
+                gu.username = #{username}
+            </if>
+        </trim>
+    </select>
+    
+    <select id="get" resultMap="groupRM">
+        SELECT 
+            <include refid="group" />
+        FROM tbl_group g
+        WHERE g.id = #{id}
+    </select>
+    
+    <select id="countByNameAndCreator" resultType="int">
+        SELECT COUNT(*)
+        FROM tbl_group
+        WHERE name = #{name}
+            AND creator = #{creator}
+    </select>
+    
+    <insert id="save" parameterType="com.bsg.dbscale.dao.domain.GroupDO">
+        INSERT INTO tbl_group
+        (
+            id,
+            name,
+            description,
+            is_sys,
+            gmt_create,
+            creator
+        )
+        VALUES
+        (
+            #{id},
+            #{name},
+            #{description},
+            #{sys},
+            #{gmtCreate},
+            #{creator}
+        )
+    </insert>
+    
+    <update id="update">
+        UPDATE tbl_group
+        <set>
+            name = #{name},
+            description = #{description}
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="remove">
+        DELETE FROM tbl_group
+        WHERE id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.TaskDAO">
+    <resultMap id="taskRM" type="com.bsg.dbscale.dao.domain.TaskDO">
+        <id property="id" column="task_id" />
+        <result property="siteId" column="task_site_id" />
+        <result property="objType" column="task_obj_type" />
+        <result property="objId" column="task_obj_id" />
+        <result property="objName" column="task_obj_name" />
+        <result property="actionType" column="task_action_type" />
+        <result property="block" column="task_is_block" />
+        <result property="startDateTime" column="task_start_datetime" />
+        <result property="endDateTime" column="task_end_datetime" />
+        <result property="state" column="task_state" />
+        <result property="owner" column="task_owner" />
+        <result property="sequence" column="task_sequence" />
+        <result property="gmtCreate" column="task_gmt_create" />
+        <result property="creator" column="task_creator" />
+    </resultMap>
+    
+    <resultMap id="taskDetailRM" type="com.bsg.dbscale.dao.domain.TaskDO"
+        extends="taskRM">
+        <collection property="subtasks"
+            resultMap="com.bsg.dbscale.dao.dao.SubtaskDAO.subtaskRM" >
+        </collection>
+    </resultMap>
+    
+    <sql id="task">
+        task.id AS task_id, 
+            task.site_id AS task_site_id,
+            task.obj_type AS task_obj_type, 
+            task.obj_id AS task_obj_id, 
+            task.obj_name AS task_obj_name,
+            task.action_type AS task_action_type, 
+            task.is_block AS task_is_block, 
+            task.start_datetime AS task_start_datetime, 
+            task.end_datetime AS task_end_datetime, 
+            task.state AS task_state, 
+            task.owner AS task_owner, 
+            task.sequence AS task_sequence, 
+            task.gmt_create AS task_gmt_create,
+            task.creator AS task_creator
+    </sql>
+    
+    <select id="list" resultMap="taskDetailRM">
+        SELECT 
+            <include refid="task" />
+        FROM tbl_task task
+        <trim prefix="WHERE" prefixOverrides="AND | OR ">
+            <if test="siteId != null">
+                AND task.site_id = #{siteId}
+            </if>
+            <if test="startDate != null">
+                AND task.start_datetime >= #{startDate}
+            </if>
+            <if test="endDate != null">
+                AND task.end_datetime <![CDATA[ <= ]]> #{endDate}
+            </if>
+            <if test="objType != null">
+                AND task.obj_type = #{objType}
+            </if>
+            <if test="objId != null">
+                AND task.obj_id = #{objId}
+            </if>
+            <if test="actionType != null">
+                AND task.action_type = #{actionType}
+            </if>
+            <if test="owner != null">
+                AND task.owner = #{owner}
+            </if>
+        </trim>
+        ORDER BY task.sequence DESC
+    </select>
+    
+    <select id="listLatest" resultMap="taskDetailRM">
+        SELECT 
+            <include refid="task" />
+        FROM tbl_task task, 
+            (SELECT site_id, 
+                obj_type, 
+                obj_id,
+                MAX(sequence) AS max_sequence 
+             FROM tbl_task
+             WHERE obj_type = #{objType}
+                <if test="siteId != null">
+                    AND site_id = #{siteId}
+                </if>
+             GROUP BY obj_id) tmp
+        WHERE task.site_id = tmp.site_id
+            AND task.obj_type = tmp.obj_type
+            AND task.sequence = tmp.max_sequence
+    </select>
+    
+    <select id="listRunning" resultMap="taskDetailRM">
+        SELECT 
+            <include refid="task" />,
+            <include refid="com.bsg.dbscale.dao.dao.SubtaskDAO.subtask" />
+        FROM tbl_task task, 
+            tbl_subtask subtask
+        WHERE subtask.task_id = task.id
+            AND task.state = "running"
+        ORDER BY task.id DESC, subtask.priority ASC
+    </select>
+    
+    <select id="get" resultMap="taskDetailRM">
+        SELECT 
+            <include refid="task" />,
+            <include refid="com.bsg.dbscale.dao.dao.SubtaskDAO.subtask" />
+        FROM tbl_task task, 
+            tbl_subtask subtask
+        WHERE subtask.task_id = task.id
+            AND task.id = #{id}
+        ORDER BY subtask.priority ASC
+    </select>
+    
+    <select id="getLatest" resultMap="taskDetailRM">
+        SELECT 
+            <include refid="task" />
+        FROM tbl_task task
+        WHERE task.obj_type = #{objType}
+            AND task.obj_id = #{objId}
+            <if test="actionType != null">
+                AND task.action_type = #{actionType}
+            </if>
+        ORDER BY sequence DESC 
+        LIMIT 0,1
+    </select>
+    
+    <insert id="save" parameterType="com.bsg.dbscale.dao.domain.TaskDO">
+        INSERT INTO tbl_task
+        (
+            id,
+            site_id,
+            obj_type,
+            obj_id,
+            obj_name,
+            action_type,
+            is_block,
+            start_datetime,
+            end_datetime,
+            state,
+            owner,         
+            gmt_create,
+            creator
+        )
+        VALUES
+        (
+            #{id},
+            #{siteId},
+            #{objType},        
+            #{objId},
+            #{objName},
+            #{actionType},
+            #{block},
+            #{startDateTime},
+            #{endDateTime},
+            #{state},
+            #{owner},
+            #{gmtCreate},
+            #{creator}
+        )
+    </insert>
+
+    <update id="updateToStart">
+        UPDATE tbl_task
+        <set>
+            start_datetime = #{startDateTime},
+            state = #{state}
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <update id="updateToEnd">
+        UPDATE tbl_task
+        <set>
+            end_datetime = #{endDateTime},
+            state = #{state}
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="removeCascadeByObjTypeAndObjId">
+        DELETE tbl_task, tbl_subtask 
+        FROM tbl_task LEFT JOIN tbl_subtask ON tbl_task.id = tbl_subtask.task_id
+        WHERE tbl_task.obj_type = #{objType}
+            AND tbl_task.obj_id = #{objId}
+    </delete>
+</mapper>

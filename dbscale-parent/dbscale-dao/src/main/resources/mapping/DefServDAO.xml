@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.DefServDAO">
+    <resultMap id="defServRM" type="com.bsg.dbscale.dao.domain.DefServDO">
+        <id property="code" column="code" />
+        <result property="name" column="name" />
+        <result property="stateful" column="is_stateful" />
+        <result property="enabled" column="is_enabled" />
+        <result property="sequence" column="sequence" />
+        <result property="description" column="description" />
+    </resultMap>
+    
+    <select id="list" resultMap="defServRM">
+        SELECT 
+            code,
+            name,
+            is_stateful,
+            is_enabled,
+            sequence,
+            description
+        FROM def_serv
+        <trim prefix="WHERE" prefixOverrides="AND | OR ">
+            <if test="enabled != null">
+                is_enabled = #{enabled}
+            </if>
+        </trim>
+        ORDER BY sequence ASC
+    </select>
+    
+    <select id="get" resultMap="defServRM">
+        SELECT 
+            code,
+            name,
+            is_stateful,
+            is_enabled,
+            sequence,
+            description
+        FROM def_serv
+        WHERE code = #{code}
+    </select>
+</mapper>

@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="dbscale:war">
+    <output-path>$PROJECT_DIR$/dbscale-modules/dbscale/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>dbscale</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="dbscale.war">
+      <element id="artifact" artifact-name="dbscale:war exploded" />
+    </root>
+  </artifact>
+</component>

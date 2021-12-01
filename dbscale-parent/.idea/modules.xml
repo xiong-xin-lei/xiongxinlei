@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/dbscale-modules/dbscale/dbscale.iml" filepath="$PROJECT_DIR$/dbscale-modules/dbscale/dbscale.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dbscale-cm/dbscale-cm.iml" filepath="$PROJECT_DIR$/dbscale-cm/dbscale-cm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dbscale-dao/dbscale-dao.iml" filepath="$PROJECT_DIR$/dbscale-dao/dbscale-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dbscale-modules/dbscale-modules.iml" filepath="$PROJECT_DIR$/dbscale-modules/dbscale-modules.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dbscale-parent.iml" filepath="$PROJECT_DIR$/dbscale-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dbscale-service/dbscale-service.iml" filepath="$PROJECT_DIR$/dbscale-service/dbscale-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dbscale-util/dbscale-util.iml" filepath="$PROJECT_DIR$/dbscale-util/dbscale-util.iml" />
+    </modules>
+  </component>
+</project>

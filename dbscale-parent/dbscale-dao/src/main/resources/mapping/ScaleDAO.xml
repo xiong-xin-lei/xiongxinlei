@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.ScaleDAO">
+    <resultMap id="scaleRM" type="com.bsg.dbscale.dao.domain.ScaleDO">
+        <id property="type" column="scale_type" />
+        <id property="cpuCnt" column="scale_cpu_cnt" />
+        <id property="memSize" column="scale_mem_size" />
+        <result property="name" column="scale_name" />
+        <result property="enabled" column="scale_is_enabled" />
+        <result property="sequence" column="scale_sequence" />
+    </resultMap>
+    
+    <sql id="scale">
+        scale.type AS scale_type,
+        scale.name AS scale_name,
+        scale.cpu_cnt AS scale_cpu_cnt,
+        scale.mem_size AS scale_mem_size,
+        scale.is_enabled AS scale_is_enabled,
+        scale.sequence AS scale_sequence
+    </sql>
+    
+    <select id="list" resultMap="scaleRM">
+        SELECT 
+            <include refid="scale" />
+        FROM tbl_scale scale
+        <trim prefix="WHERE" prefixOverrides="AND | OR ">
+            <if test="type != null">
+                AND scale.type = #{type}
+            </if>
+            <if test="enabled != null">
+                AND scale.is_enabled = #{enabled}
+            </if>
+        </trim>
+        ORDER BY scale.type ASC, scale.sequence ASC
+    </select>
+
+    <select id="get" resultMap="scaleRM">
+        SELECT 
+            <include refid="scale" />
+        FROM tbl_scale scale 
+        WHERE scale.type = #{type}
+            AND scale.cpu_cnt = #{cpuCnt}
+            AND scale.mem_size = #{memSize}
+    </select>
+    
+    <select id="countByTypeAndName" resultType="int">
+        SELECT COUNT(*)
+        FROM tbl_scale 
+        WHERE type = #{type}
+            AND name = #{name}
+    </select>
+    
+    <insert id="save" parameterType="com.bsg.dbscale.dao.domain.ScaleDO">
+        INSERT INTO tbl_scale
+        (
+            type,
+            name,         
+            cpu_cnt,
+            mem_size,
+            is_enabled,
+            sequence
+        )
+        VALUES
+        (
+            #{type},
+            #{name},        
+            #{cpuCnt},
+            #{memSize},
+            #{enabled},
+            #{sequence}
+        )
+    </insert>
+    
+    <update id="updateEnabled">
+        UPDATE tbl_scale
+        <set>
+            is_enabled = #{enabled}
+        </set>
+        WHERE type = #{type}
+            AND cpu_cnt = #{cpuCnt}
+            AND mem_size = #{memSize}
+    </update>
+    
+    <delete id="remove">
+        DELETE FROM tbl_scale
+        WHERE type = #{type}
+            AND cpu_cnt = #{cpuCnt}
+            AND mem_size = #{memSize}
+    </delete>
+</mapper>

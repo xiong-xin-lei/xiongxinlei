@@ -1,0 +1,2 @@
+类型,版本,键,值,默认值,范围,允许编辑,重启生效,描述,断言
+MySQL,5.7.25.12,mysqld::character_set_server,utf8mb4,latin123, ,false,false,类型：字符串，服务器默认字符集。建议使用utf8mb4,1

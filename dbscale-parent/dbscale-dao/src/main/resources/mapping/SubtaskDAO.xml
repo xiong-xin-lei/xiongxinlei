@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.SubtaskDAO">
+    <resultMap id="subtaskRM" type="com.bsg.dbscale.dao.domain.SubtaskDO">
+        <id property="id" column="subtask_id" />
+        <result property="taskId" column="subtask_task_id" />
+        <result property="objType" column="subtask_obj_type" />
+        <result property="objId" column="subtask_obj_id" />
+        <result property="objName" column="subtask_obj_name" />
+        <result property="actionType" column="subtask_action_type" />
+        <result property="priority" column="subtask_priority" />
+        <result property="startDateTime" column="subtask_start_datetime" />
+        <result property="endDateTime" column="subtask_end_datetime" />
+        <result property="state" column="subtask_state" />
+        <result property="timeout" column="subtask_timeout" />
+        <result property="msg" column="subtask_msg" />
+    </resultMap>
+    
+    <sql id="subtask">
+        subtask.id AS subtask_id,
+        subtask.task_id AS subtask_task_id,
+        subtask.obj_type AS subtask_obj_type, 
+        subtask.obj_id AS subtask_obj_id, 
+        subtask.obj_name AS subtask_obj_name,
+        subtask.action_type AS subtask_action_type,
+        subtask.priority AS subtask_priority,
+        subtask.start_datetime AS subtask_start_datetime,
+        subtask.end_datetime AS subtask_end_datetime,
+        subtask.state AS subtask_state,
+        subtask.timeout AS subtask_timeout,
+        subtask.msg AS subtask_msg
+    </sql>
+    
+    <select id="get" resultMap="subtaskRM">
+        SELECT 
+            <include refid="subtask" />
+        FROM tbl_subtask subtask
+        WHERE subtask.id = #{id}
+    </select>
+    
+    <insert id="save" parameterType="com.bsg.dbscale.dao.domain.SubtaskDO">
+        INSERT INTO tbl_subtask
+        (
+            id,
+            task_id,
+            obj_type,
+            obj_id,
+            obj_name,
+            action_type,
+            priority,
+            start_datetime,
+            end_datetime,
+            state,
+            timeout,
+            msg
+        )
+        VALUES
+        (
+            #{id},
+            #{taskId},
+            #{objType},        
+            #{objId},
+            #{objName},
+            #{actionType},
+            #{priority},
+            #{startDateTime},
+            #{endDateTime},
+            #{state},
+            #{timeout},
+            #{msg}
+        )
+    </insert>
+    
+    <update id="updateToStart">
+        UPDATE tbl_subtask
+        <set>
+            start_datetime = #{startDateTime},
+            state = #{state}
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <update id="updateToEnd">
+        UPDATE tbl_subtask
+        <set>
+            end_datetime = #{endDateTime},
+            state = #{state},
+            msg = #{msg}
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="removeByTaskId">
+        DELETE FROM tbl_subtask
+        WHERE task_id = #{taskId}
+    </delete>
+
+</mapper>

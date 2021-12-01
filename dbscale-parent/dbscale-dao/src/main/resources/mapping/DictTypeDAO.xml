@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.DictTypeDAO">
+    <resultMap id="DictTypeRM" type="com.bsg.dbscale.dao.domain.DictTypeDO">
+        <result property="code" column="dict_type_code" />
+        <result property="name" column="dict_type_name" />
+        <collection property="dicts" ofType="com.bsg.dbscale.dao.domain.DictDO"
+            resultMap="com.bsg.dbscale.dao.dao.DictDAO.dictRM" />
+    </resultMap>
+    
+    <sql id="dict_type">
+        dict_type.code AS dict_type_code,
+        dict_type.name AS dict_type_name
+    </sql>
+
+    <select id="list" resultMap="DictTypeRM">
+        SELECT 
+            <include refid="dict_type" />,
+            <include refid="com.bsg.dbscale.dao.dao.DictDAO.dict" />
+        FROM tbl_dict_type dict_type
+        LEFT JOIN tbl_dict dict ON dict_type.code = dict.dict_type_code
+        ORDER BY dict_type.name, dict.sequence ASC
+
+    </select>
+
+    <select id="get" resultMap="DictTypeRM">
+        SELECT 
+            <include refid="dict_type" />,
+            <include refid="com.bsg.dbscale.dao.dao.DictDAO.dict" />
+        FROM tbl_dict_type dict_type
+        LEFT JOIN tbl_dict dict ON dict_type.code = dict.dict_type_code
+        WHERE dict_type.code = #{code}
+        ORDER BY dict.sequence ASC
+    </select>
+
+</mapper>

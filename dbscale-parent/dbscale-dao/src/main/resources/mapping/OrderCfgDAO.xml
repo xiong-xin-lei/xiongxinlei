@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.OrderCfgDAO">
+    <resultMap id="orderCfgRM" type="com.bsg.dbscale.dao.domain.OrderCfgDO">
+        <id property="category" column="category" />
+        <id property="type" column="type" />
+        <result property="cpuCnt" column="cpu_cnt" />
+        <result property="memSize" column="mem_size" />
+        <result property="diskType" column="disk_type" />
+        <result property="dataSize" column="data_size" />
+        <result property="logSize" column="log_size" />
+        <result property="port" column="port" />
+        <result property="clusterHA" column="cluster_ha" />
+        <result property="hostHA" column="host_ha" />
+    </resultMap>
+    
+    <sql id="orderCfg">
+        category,
+        type,
+        cpu_cnt,
+        mem_size,
+        disk_type,
+        data_size,
+        log_size,
+        port,
+        cluster_ha,
+        host_ha
+    </sql>
+    
+    <select id="list" resultMap="orderCfgRM">
+        SELECT 
+            <include refid="orderCfg" />
+        FROM tbl_order_cfg
+        <trim prefix="WHERE" prefixOverrides="AND | OR ">
+            <if test="category != null">
+                AND category = #{category}
+            </if>
+        </trim>
+    </select>
+    
+    <select id="get" resultMap="orderCfgRM">
+        SELECT 
+            <include refid="orderCfg" />
+        FROM tbl_order_cfg
+        WHERE category = #{category}
+            AND type = #{type}
+    </select>
+    
+    <select id="countByScale" resultType="int">
+        SELECT COUNT(*)
+        FROM tbl_order_cfg
+        WHERE type = #{type}
+            AND cpu_cnt = #{cpuCnt}
+            AND mem_size = #{memSize}
+    </select>
+    
+    <insert id="save" parameterType="com.bsg.dbscale.dao.domain.OrderCfgDO">
+        INSERT INTO tbl_order_cfg
+        (
+            category,
+	        type,
+	        cpu_cnt,
+	        mem_size,
+	        disk_type,
+	        data_size,
+	        log_size,
+	        port,
+            cluster_ha,
+            host_ha
+        )
+        VALUES
+        (
+            #{category},
+            #{type},
+            #{cpuCnt},
+            #{memSize},
+            #{diskType},
+            #{dataSize},
+            #{logSize},
+            #{port},
+            #{clusterHA},
+            #{hostHA}
+        )    
+    </insert>
+    
+    <insert id="update">
+        UPDATE tbl_order_cfg
+        <set> 
+            cpu_cnt = #{cpuCnt},
+            mem_size = #{memSize},
+            disk_type = #{diskType},
+            data_size = #{dataSize},
+            log_size = #{logSize},
+            port = #{port},
+            cluster_ha = #{clusterHA},
+            host_ha = #{hostHA}
+        </set>
+        WHERE category = #{category}
+            AND type = #{type}
+    </insert>
+    
+    <delete id="remove">
+        DELETE FROM tbl_order_cfg
+        WHERE category = #{category}
+    </delete>
+</mapper>

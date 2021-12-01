@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bsg.dbscale.dao.dao.ForceRebuildLogDAO">
+    <resultMap id="forceRebuildLogRM" type="com.bsg.dbscale.dao.domain.ForceRebuildLogDO">
+        <id property="id" column="id" />
+        <result property="unitRelateId" column="unit_relate_id" />
+        <result property="sourceHostRelateId" column="source_host_relate_id" />
+        <result property="targetHostRelateId" column="target_host_relate_id" />
+        <result property="taskId" column="task_id" />
+    </resultMap>
+    
+    <sql id="forceRebuild">
+        id,
+        unit_relate_id,
+        source_host_relate_id,
+        target_host_relate_id,
+        task_id
+    </sql>
+    
+    <select id="list" resultMap="forceRebuildLogRM">
+        SELECT 
+            <include refid="forceRebuild" />
+        FROM tbl_force_rebuild_log
+        <trim prefix="WHERE" prefixOverrides="AND | OR ">
+            <if test="sourceHostId != null">
+                AND source_host_relate_id = #{sourceHostRelateId}
+            </if>
+            <if test="unitRelateId != null">
+                AND unit_relate_id = #{unitRelateId}
+            </if>
+        </trim> 
+        ORDER BY id DESC
+    </select>
+
+    <insert id="save" parameterType="com.bsg.dbscale.dao.domain.ForceRebuildLogDO">
+        INSERT INTO tbl_force_rebuild_log
+        (
+            unit_relate_id,
+            source_host_relate_id,
+            target_host_relate_id,
+            task_id
+        )
+        VALUES
+        (
+            #{unitRelateId},
+            #{sourceHostRelateId},
+            #{targetHostRelateId},
+            #{taskId}
+        )
+    </insert>
+    
+    <update id="update">
+        UPDATE tbl_force_rebuild_log
+        <set>
+            target_host_relate_id = #{targetHostRelateId}
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="removeByUnitRelateId">
+        DELETE FROM tbl_force_rebuild_log
+        WHERE unit_relate_id = #{unitRelateId}
+    </delete>
+    
+    <delete id="removeByHostRelateId">
+        DELETE FROM tbl_force_rebuild_log
+        WHERE source_host_relate_id = #{hostRelateId}
+            OR target_host_relate_id = #{hostRelateId}
+    </delete>
+    
+</mapper>
